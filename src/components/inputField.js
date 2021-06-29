@@ -6,7 +6,7 @@ class InputField extends Component {
   render() {
     return (
       <div className="flex-column">
-        <label htmlFor="input-field"> City </label>
+        {/* <label htmlFor="input-field"> City </label> */}
         <input
           type="text"
           id="input-field"
