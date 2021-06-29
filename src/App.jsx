@@ -15,8 +15,21 @@ class App extends Component {
           <LargeWeatherCard />
         </div>
         <div className="flex-column margin-lg">
-          <div  style={{marginTop : "30px" }} className="flex-row">
-            <SmallWeatherCard />
+          <div className="flex-row">
+            <SmallWeatherCard emoji="☀️" />
+            <SmallWeatherCard emoji="🌧" />
+            <SmallWeatherCard emoji="☁️" />
+            <SmallWeatherCard emoji="⛅" />
+            <SmallWeatherCard emoji="⛈" />
+          </div>
+          <div
+            style={{
+              fontSize: "40px",
+              marginTop: "40px",
+              padding: "100px auto auto",
+            }}
+          >
+            <b>TODO</b>
           </div>
         </div>
       </div>

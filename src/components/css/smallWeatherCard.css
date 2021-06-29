@@ -1,0 +1,20 @@
+.small-card {
+  font-size: 15px;
+  padding: 5px;
+  margin: 0 3px 2px;
+  border-radius: 8px;
+}
+
+.small-card:hover {
+  background-color: rgb(179, 217, 255);
+  box-shadow: 0 0 5pt 0.5pt #d3d3d3;
+}
+
+.small-card:focus {
+  box-shadow: 0 0 5pt 2pt #d3d3d3;
+  outline-width: 0px;
+}
+
+.weather-emoji {
+  font-size: 30px;
+}
