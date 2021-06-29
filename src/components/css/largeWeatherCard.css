@@ -1,0 +1,29 @@
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.card {
+  font-family: "Quicksand", sans-serif;
+  font-size: 15px;
+  margin: 1vh auto;
+  padding: 30px;
+}
+
+.thin-border {
+  border: solid 1.5px rgb(240, 240, 240);
+  border-radius: 8px;
+}
+
+.faint {
+  color: rgb(152, 152, 152);
+}
+
+.temperature {
+  font-family: "Oswald", sans-serif;
+  font-size: 40px;
+}
+
+.temperature p {
+  margin: 10px;
+}
