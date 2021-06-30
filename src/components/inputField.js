@@ -12,6 +12,7 @@ class InputField extends Component {
           id="input-field"
           name="input-field"
           className="thin-border"
+          placeholder="Type a City name"
         />
       </div>
     );
