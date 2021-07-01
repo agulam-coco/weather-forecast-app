@@ -4,13 +4,14 @@ import "./App.css";
 import InputField from "./components/inputField";
 import LargeWeatherCard from "./components/largeWeatherCard";
 import SmallWeatherCard from "./components/smallWeatherCard";
+import CountryName from "./components/countryName";
 
 class App extends Component {
   state = {};
   render() {
     return (
-      <div className="main-weather-container">
-        <div className="flex-column margin-lg">
+      <div className="main-weather-container" id="main-weather-container">
+        <div className="flex-column margin-lg" style={{ marginTop: "0px" }}>
           <InputField />
           <LargeWeatherCard />
         </div>
@@ -22,14 +23,8 @@ class App extends Component {
             <SmallWeatherCard emoji="⛅" />
             <SmallWeatherCard emoji="⛈" />
           </div>
-          <div
-            style={{
-              fontSize: "40px",
-              marginTop: "40px",
-              padding: "100px auto auto",
-            }}
-          >
-            <b>TODO</b>
+          <div className="flex-column countryname-container">
+            <CountryName />
           </div>
         </div>
       </div>

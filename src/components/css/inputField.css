@@ -1,13 +1,14 @@
 input {
   width: auto;
-  height: 5vh;
+  height: 30px;
   -webkit-transition: 1s; /* Safari */
   transition: 1s;
 
   margin-top: 4px;
   margin-bottom: 4px;
-  padding: 2px 10px;
-  font-size: 20px;
+  padding: 2px 10px 2px 10px;
+  padding-left: 30px;
+  font-size: 15px;
 }
 
 input[type="text"]:hover {
@@ -21,4 +22,32 @@ input[type="text"]:focus {
 
 label {
   text-align: left;
+}
+
+.fa-search {
+  color: rgb(220, 220, 220);
+  font-size: 20px;
+  position: relative;
+  top: 34px;
+  left: 5px;
+}
+
+.or-text {
+  font-size: 15px;
+}
+
+.search-button {
+  width: 130px;
+  height: 25px;
+  background-color: rgba(245, 245, 245);
+  align-self: flex-end;
+  font-family: "Quicksand", sans-serif;
+}
+
+.search-button:hover {
+  background-color: rgba(240, 240, 240);
+}
+
+.geolocation {
+  height: 40px;
 }

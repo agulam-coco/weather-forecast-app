@@ -7,7 +7,7 @@ class LargeWeatherCard extends Component {
   state = {};
   render() {
     return (
-      <div className="card ">
+      <div className="card">
         <div className="faint">
           <p>5:05 PM, Mon, Nov 23,2020</p>
         </div>
