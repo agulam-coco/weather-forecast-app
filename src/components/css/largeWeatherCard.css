@@ -6,8 +6,8 @@
 .card {
   font-family: "Quicksand", sans-serif;
   font-size: 15px;
-  margin: 1vh auto;
-  padding: 30px;
+  margin: 30px auto 0;
+  padding: 60px 30px 30px;
 }
 
 .thin-border {
@@ -17,11 +17,6 @@
 
 .faint {
   color: rgb(152, 152, 152);
-}
-
-.temperature {
-  font-family: "Oswald", sans-serif;
-  font-size: 40px;
 }
 
 .temperature p {

@@ -1,5 +1,5 @@
 .main-weather-container {
-  padding: 40px;
+  padding: 40px 40px 40px 30px;
   font-size: 24px;
   background: #fff;
   display: flex;
@@ -15,4 +15,11 @@
 
 .margin-lg {
   margin: 20px 5px;
+}
+
+.countryname-container {
+  margin-top: 15px;
+  margin-left: 10px;
+  position: relative;
+  align-items: center;
 }

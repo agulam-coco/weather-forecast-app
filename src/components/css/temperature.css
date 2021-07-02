@@ -1,0 +1,31 @@
+.temperature {
+  justify-content: center;
+}
+.temperature-lg {
+  font-family: "Oswald", sans-serif;
+  font-size: 40px;
+}
+
+.temperature-lg p {
+  display: block;
+  margin: 0;
+}
+
+.temperature-lg p[id="emoji"] {
+  font-size: 80px;
+}
+
+.temperature-sm {
+  font-family: "Oswald", sans-serif;
+  font-size: 30px;
+}
+
+.flex-column-reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.flex-row-reverse {
+  display: flex;
+  flex-direction: row-reverse;
+}
