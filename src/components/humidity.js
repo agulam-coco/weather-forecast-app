@@ -7,7 +7,7 @@ class Humidity extends Component {
     return (
       <div className="weather-detail">
         <p className="faint">Humidity</p>
-        <p className="">45%</p>
+        <p>{this.props.humidity}</p>
       </div>
     );
   }

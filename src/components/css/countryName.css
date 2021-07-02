@@ -6,3 +6,10 @@
   font-size: 70px;
   color: rgba(48, 48, 48);
 }
+
+#country-name-canvas {
+  min-height: 100%;
+  min-width: 100%;
+  filter: blur(8px);
+  transition: background-image 2s ease-in-out;
+}
