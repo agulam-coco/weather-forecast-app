@@ -7,7 +7,7 @@ class WindSpeed extends Component {
     return (
       <div className="weather-detail">
         <p className="faint">Wind speed</p>
-        <p>{this.props.wind}</p>
+        <p>{this.props.wind + " m/s"}</p>
       </div>
     );
   }

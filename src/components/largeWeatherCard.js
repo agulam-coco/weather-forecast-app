@@ -15,7 +15,8 @@ class LargeWeatherCard extends Component {
         </div>
         <div className="flex-row temperature">
           <Temperature
-            emoji={this.props.obj.emoji}
+            description={this.props.obj.description}
+            icon={this.props.obj.icon}
             temp={this.props.obj.temp}
             tempCName={this.props.tempCName}
           />

@@ -47,7 +47,3 @@ label {
 .search-button:hover {
   background-color: rgba(240, 240, 240);
 }
-
-.geolocation {
-  height: 40px;
-}
