@@ -22,3 +22,23 @@
   position: relative;
   align-items: center;
 }
+
+/* MOBILE */
+@media (max-width: 630px) {
+  #main-weather-container {
+    flex-direction: column;
+  }
+
+  #small-weather-container {
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  #div-box-2 {
+    flex-direction: column-reverse;
+  }
+
+  #country-name-container {
+    margin-bottom: 10px;
+  }
+}

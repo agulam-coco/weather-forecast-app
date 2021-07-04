@@ -67,8 +67,34 @@ class App extends Component {
   };
 
   componentDidMount() {
+    this.preloadWeatherImages();
     this.getUserLocation();
   }
+
+  preloadWeatherImages = () => {
+    let imagesArray = [
+      "01d",
+      "01n",
+      "02d",
+      "02n",
+      "03",
+      "04",
+      "09",
+      "10d",
+      "10n",
+      "11",
+      "13",
+      "50",
+    ];
+
+    for (let i = 0; i < imagesArray.length; i++) {
+      new Image().src =
+        process.env.PUBLIC_URL +
+        "/weather-icons/svg/" +
+        imagesArray[i] +
+        ".svg";
+    }
+  };
 
   getUserLocation = () => {
     //get user locatoin
@@ -98,9 +124,11 @@ class App extends Component {
     let userCountry = document.getElementById("input-field").value;
 
     if (userCountry.trim()) {
-      let query = userCountry.replace(", ", ",").replace(" ", ",");
+      let query = userCountry;
 
-      this.fetchWeatherInfo(query)
+      this.fetchWeatherInfo(
+        `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=${UNITS}&appid=${API_KEY}`
+      )
         .then((data) => {
           if (data) {
             this.parseJson(data);
@@ -116,14 +144,19 @@ class App extends Component {
   };
 
   setLonLatState = (data) => {
-    //set long and lat data
+    //set long and lat data to state
     this.setState({
       lonLat: { lon: data.coord.lon, lat: data.coord.lat },
     });
   };
-  //fetch small card weather info
+
   fetchsmallWeatherInfo = () => {
-    this.fetchWeatherInfo(null, null, true)
+    //excluded values in api call
+    let exclude = "currently,minutely,hourly";
+
+    this.fetchWeatherInfo(
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.lonLat.lat}&lon=${this.state.lonLat.lon}&units=${UNITS}&exclude=${exclude}&appid=${API_KEY}`
+    )
       .then((data) => {
         data ? this.parseJson5Days(data) : console.error("Invalid 2");
       })
@@ -136,7 +169,10 @@ class App extends Component {
       lat: lonLatGeoLocation.coords.latitude,
     };
 
-    this.fetchWeatherInfo(null, lonLat)
+    this.fetchWeatherInfo(
+      `https://api.openweathermap.org/data/2.5/weather?lon=${lonLat.lon}&lat=${lonLat.lat}&units=${UNITS}&appid=${API_KEY}`
+    )
+
       .then((data) => {
         if (data) {
           this.parseJson(data);
@@ -150,18 +186,7 @@ class App extends Component {
       .catch((error) => console.error("Network error lon Lat", error));
   };
 
-  fetchWeatherInfo = async (query = null, lonLat = null, fiveDays = false) => {
-    let url;
-    let exclude;
-
-    if (query) {
-      url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=${UNITS}&appid=${API_KEY}`;
-    } else if (fiveDays) {
-      exclude = "currently,minutely,hourly";
-      url = `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.lonLat.lat}&lon=${this.state.lonLat.lon}&units=${UNITS}&exclude=${exclude}&appid=${API_KEY}`;
-    } else {
-      url = `https://api.openweathermap.org/data/2.5/weather?lon=${lonLat.lon}&lat=${lonLat.lat}&units=${UNITS}&appid=${API_KEY}`;
-    }
+  fetchWeatherInfo = async (url) => {
     let response = await fetch(url);
     let data = await response.json();
     return response.ok ? data : null;
@@ -170,6 +195,7 @@ class App extends Component {
   parseJson5Days = (data) => {
     let dailyArray = data.daily;
     let smallWeatherArray = [];
+
     //get small weather card data for 5 days
     for (let i = 0; i < 5; i++) {
       let daily = dailyArray[i];
@@ -179,7 +205,7 @@ class App extends Component {
         temp: Math.round(daily.temp.day),
         humidity: daily.humidity,
         icon: this.formatIconName(daily.weather[0].icon),
-        date: this.getDateUnix(daily.dt),
+        date: this.formatSmallWeatherDate(daily.dt),
         // description: daily.weather[0].description,
       };
 
@@ -193,23 +219,27 @@ class App extends Component {
   };
 
   parseJson = (data) => {
-    //5:05 PM, Mon, Nov 23,2020
+    //large weather card data
     let temp = Math.round(data.main.temp);
     let description = data.weather[0].description;
     let humidity = data.main.humidity;
     let wind = data.wind.speed;
-
+    let icon = this.formatIconName(data.weather[0].icon);
     let date = new Date(0);
     date.setUTCSeconds(data.dt + data.timezone);
     date = this.getDate(date);
-    let icon = this.formatIconName(data.weather[0].icon);
 
+    //country data for country name
     let countryName = data.name;
     let alphaCode = data.sys.country;
+
+    //country obj
     let country = {
       name: countryName,
       alphaCode: alphaCode,
     };
+
+    //large weather card obj
     let weatherCard = {
       tempCName: "flex-column temperature-lg",
       temp: temp,
@@ -227,11 +257,12 @@ class App extends Component {
   };
 
   formatIconName(str) {
+    //exclude the day or night tag at the end except for these noted
     let exclude = ["01d", "01n", "02d", "02n", "10d", "10n"];
     return exclude.includes(str) ? str : str[0] + str[1];
   }
 
-  getDateUnix(int) {
+  formatSmallWeatherDate(int) {
     const months = [
       "January",
       "February",
@@ -246,20 +277,30 @@ class App extends Component {
       "November",
       "December",
     ];
-    let date_obj = new Date(0);
-    date_obj.setUTCSeconds(int);
-    let mm = months[date_obj.getMonth()];
-    mm = mm[0] + mm[1] + mm[2];
-    let dd = String(date_obj.getDate()).padStart(2, "0");
 
+    //date obj with utc time
+    let dateObj = this.getUtcDateObj(int);
+
+    //formating
+    let mm = months[dateObj.getMonth()];
+    mm = mm[0] + mm[1] + mm[2];
+    let dd = String(dateObj.getDate()).padStart(2, "0");
+
+    //(date is today)? 'today': regular date format;
     let today_obj = new Date();
-    return today_obj.getDate() === date_obj.getDate() &&
-      today_obj.getMonth() === date_obj.getMonth()
+    return today_obj.getDate() === dateObj.getDate() &&
+      today_obj.getMonth() === dateObj.getMonth()
       ? "Today"
       : `${mm} ${dd}`;
   }
 
-  getDate(date_obj) {
+  getUtcDateObj(int) {
+    let dateObj = new Date(0);
+    dateObj.setUTCSeconds(int);
+    return dateObj;
+  }
+
+  getDate(int) {
     const months = [
       "January",
       "February",
@@ -276,64 +317,83 @@ class App extends Component {
     ];
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    let dayName = days[date_obj.getDay()];
-    let dd = String(date_obj.getDate()).padStart(2, "0");
-    let mm = months[date_obj.getMonth()];
-    let yyyy = date_obj.getFullYear();
+    //string formating
+    let dateObj = this.getUtcDateObj(int);
+    let dayName = days[dateObj.getDay()];
+    let dd = String(dateObj.getDate()).padStart(2, "0");
+    let mm = months[dateObj.getMonth()];
+    let yyyy = dateObj.getFullYear();
 
-    let hh = date_obj.getHours();
-    let mn = date_obj.getMinutes();
+    let hh = dateObj.getHours();
+    let mn = dateObj.getMinutes();
     let am_pm = hh >= 12 ? "PM" : "AM";
 
     return `${hh}:${mn} ${am_pm}, ${dayName}, ${mm} ${dd},${yyyy}`;
   }
 
   setMapBackground = async () => {
-    let countryNameChart = document.getElementById("country-name-canvas");
-    let height = countryNameChart.offsetHeight;
-    let width = countryNameChart.offsetWidth;
+    setTimeout(() => {
+      let countryNameChart = document.getElementById("country-name-canvas");
+      let height = countryNameChart.offsetHeight;
+      let width = countryNameChart.offsetWidth;
 
-    let src = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${this.state.lonLat.lon},${this.state.lonLat.lat},4,0/${width}x${height}?access_token=pk.eyJ1IjoiYWd1bGFtIiwiYSI6ImNrcWt2a2ZydTBkMTUyeG40cWFnN3NtNm0ifQ.7yV6k5s2KL2vwJEruQzeBQ`;
+      let src = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${this.state.lonLat.lon},${this.state.lonLat.lat},4,0/${width}x${height}?access_token=pk.eyJ1IjoiYWd1bGFtIiwiYSI6ImNrcWt2a2ZydTBkMTUyeG40cWFnN3NtNm0ifQ.7yV6k5s2KL2vwJEruQzeBQ`;
 
-    let img = new Image();
-    img.onload = function () {
-      countryNameChart.style.backgroundImage = `url("${src}")`;
-      countryNameChart.style.filter = "blur(8px)";
-    };
+      let img = new Image();
+      img.onload = function () {
+        countryNameChart.style.backgroundImage = `url("${src}")`;
+        countryNameChart.style.filter = "blur(8px)";
+      };
 
-    img.src = src;
+      img.src = src;
+    }, 5000);
   };
 
   render() {
     return (
-      <div className="main-weather-container" id="main-weather-container">
-        <div className="flex-column margin-lg" style={{ marginTop: "0px" }}>
-          <InputField
-            functions={{
-              verifyInput: this.verifyInput,
-            }}
-          />
-          <LargeWeatherCard
-            obj={this.state.largeWeatherCard}
-            tempCName={this.state.largeWeatherCard.tempCName}
-          />
-        </div>
-        <div className="flex-column margin-lg">
-          <div className="flex-row">
-            {this.state.smallWeatherCards.map((weatherCard) => (
-              <SmallWeatherCard
-                key={weatherCard.id}
-                obj={weatherCard}
-                tempCName={this.state.smallWeatherClassName}
-              />
-            ))}
-          </div>
-          <div className="flex-column country-name-container">
-            <CountryName
-              name={this.state.country.name}
-              alphaCode={this.state.country.alphaCode}
+      <div>
+        <div className="main-weather-container" id="main-weather-container">
+          <div className="flex-column margin-lg" style={{ marginTop: "0px" }}>
+            <InputField
+              functions={{
+                verifyInput: this.verifyInput,
+              }}
+            />
+            <LargeWeatherCard
+              obj={this.state.largeWeatherCard}
+              tempCName={this.state.largeWeatherCard.tempCName}
             />
           </div>
+          <div className="flex-column margin-lg" id="div-box-2">
+            <div className="flex-row" id="small-weather-container">
+              {this.state.smallWeatherCards.map((weatherCard) => (
+                <SmallWeatherCard
+                  key={weatherCard.id}
+                  obj={weatherCard}
+                  tempCName={this.state.smallWeatherClassName}
+                />
+              ))}
+            </div>
+            <div
+              className="flex-column country-name-container"
+              id="country-name-container"
+            >
+              <CountryName
+                name={this.state.country.name}
+                alphaCode={this.state.country.alphaCode}
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          Icons made by
+          <a href="https://www.freepik.com" title="Freepik">
+            Freepik
+          </a>
+          from
+          <a href="https://www.flaticon.com/" title="Flaticon">
+            www.flaticon.com
+          </a>
         </div>
       </div>
     );

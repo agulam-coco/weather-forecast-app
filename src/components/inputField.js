@@ -2,8 +2,6 @@ import react from "react";
 import React, { Component } from "react";
 import "./css/inputField.css";
 
-import "./scripts/weather.js";
-
 class InputField extends Component {
   componentDidMount() {
     document
@@ -31,6 +29,7 @@ class InputField extends Component {
           id="input-field"
           name="input-field"
           className="thin-border"
+          placeholder="London, GB"
         />
         <div className="flex-column">
           <button

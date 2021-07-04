@@ -20,20 +20,12 @@ input[type="text"]:focus {
   outline-width: 0px;
 }
 
-label {
-  text-align: left;
-}
-
 .fa-search {
   color: rgb(220, 220, 220);
   font-size: 20px;
   position: relative;
   top: 34px;
   left: 5px;
-}
-
-.or-text {
-  font-size: 15px;
 }
 
 .search-button {
@@ -46,4 +38,10 @@ label {
 
 .search-button:hover {
   background-color: rgba(240, 240, 240);
+}
+
+@media (max-width: 630px) {
+  input {
+    width: auto;
+  }
 }
