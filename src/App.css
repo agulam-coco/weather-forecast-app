@@ -27,6 +27,7 @@
 @media (max-width: 630px) {
   #main-weather-container {
     flex-direction: column;
+    padding: 0;
   }
 
   #small-weather-container {
@@ -39,6 +40,20 @@
   }
 
   #country-name-container {
+    display: none;
     margin-bottom: 10px;
+  }
+
+  .mobile-country-name {
+    margin-top: 30px;
+    margin-bottom: 0;
+    font-family: "Jomhuria", cursive;
+    font-size: 70px;
+    color: rgba(48, 48, 48);
+    display: visible;
+  }
+  .card {
+    margin-top: 0px;
+    padding-top: 0px;
   }
 }

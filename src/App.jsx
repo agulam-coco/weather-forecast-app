@@ -67,9 +67,78 @@ class App extends Component {
   };
 
   componentDidMount() {
+    window.addEventListener("scroll", this.handleMobileLogic);
+    window.addEventListener("resize", this.handleMobileLogic);
+    window.addEventListener("load", this.handleMobileLogic);
+
     this.preloadWeatherImages();
     this.getUserLocation();
   }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleMobileLogic);
+    window.removeEventListener("resize", this.handleMobileLogic);
+    window.removeEventListener("load", this.handleMobileLogic);
+  }
+
+  handleMobileLogic = () => {
+    const mobileMaxHeight = 630;
+    const classNameDesktop = "flex-column small-card";
+    const classNameMobileHighlight = "flex-column small-card-mobile-highlight";
+    const classNameMobile = "flex-column small-card-mobile";
+    const classNames = [
+      "small-card",
+      "small-card-mobile",
+      "small-card-mobile-highlight",
+    ];
+
+    //if device is a phone
+    if (window.innerWidth <= mobileMaxHeight) {
+      let gridTop = window.innerHeight * 0.2,
+        gridBottom = window.innerHeight * 0.7;
+
+      //loop through each of the potential class names and handle
+      for (let i = 0; i < classNames.length; i++) {
+        //select small weather cards with classname
+        let elems = document.getElementsByClassName(classNames[i]);
+
+        //loop through each of the five cards
+        if (elems)
+          for (let j = 0; j < elems.length; j++) {
+            let elem = elems[j];
+
+            // get the top of the element
+            let elemTop = elem.offsetTop - window.pageYOffset;
+
+            //highlight card
+            if (
+              elemTop >= gridTop &&
+              elemTop + elem.offsetHeight <= gridBottom
+            ) {
+              elem.className = classNameMobile + classNameMobileHighlight;
+            }
+            //return card to normal
+            else {
+              elem.className = classNameMobile;
+            }
+          }
+      }
+    }
+    //restore larger screen class name
+    else {
+      for (let i = 0; i < classNames.length; i++) {
+        let elems = document.getElementsByClassName(classNames[i]);
+        if (elems) {
+          for (let j = 0; j < elems.length; j++) {
+            elems[j].className = classNameDesktop;
+          }
+        }
+      }
+
+      //hide mobile country name
+      document.getElementById("mobile-country-name").style.display = "none";
+    }
+  };
 
   preloadWeatherImages = () => {
     let imagesArray = [
@@ -332,21 +401,19 @@ class App extends Component {
   }
 
   setMapBackground = async () => {
-    setTimeout(() => {
-      let countryNameChart = document.getElementById("country-name-canvas");
-      let height = countryNameChart.offsetHeight;
-      let width = countryNameChart.offsetWidth;
+    let countryNameChart = document.getElementById("country-name-canvas");
+    let height = countryNameChart.offsetHeight;
+    let width = countryNameChart.offsetWidth;
 
-      let src = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${this.state.lonLat.lon},${this.state.lonLat.lat},4,0/${width}x${height}?access_token=pk.eyJ1IjoiYWd1bGFtIiwiYSI6ImNrcWt2a2ZydTBkMTUyeG40cWFnN3NtNm0ifQ.7yV6k5s2KL2vwJEruQzeBQ`;
+    let src = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${this.state.lonLat.lon},${this.state.lonLat.lat},4,0/${width}x${height}?access_token=pk.eyJ1IjoiYWd1bGFtIiwiYSI6ImNrcWt2a2ZydTBkMTUyeG40cWFnN3NtNm0ifQ.7yV6k5s2KL2vwJEruQzeBQ`;
 
-      let img = new Image();
-      img.onload = function () {
-        countryNameChart.style.backgroundImage = `url("${src}")`;
-        countryNameChart.style.filter = "blur(8px)";
-      };
+    let img = new Image();
+    img.onload = function () {
+      countryNameChart.style.backgroundImage = `url("${src}")`;
+      countryNameChart.style.filter = "blur(8px)";
+    };
 
-      img.src = src;
-    }, 5000);
+    img.src = src;
   };
 
   render() {
@@ -359,6 +426,10 @@ class App extends Component {
                 verifyInput: this.verifyInput,
               }}
             />
+            <div class="mobile-country-name" id="mobile-country-name">
+              {this.state.country.name + ", " + this.state.country.alphaCode}
+            </div>
+
             <LargeWeatherCard
               obj={this.state.largeWeatherCard}
               tempCName={this.state.largeWeatherCard.tempCName}
