@@ -6,20 +6,76 @@
   flex-direction: row;
   border-radius: 8px;
 }
+.flex-column-reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.flex-row-reverse {
+  display: flex;
+  flex-direction: row-reverse;
+}
 
 .flex-column {
   display: flex;
   flex-direction: column;
-  /* border: red 2px solid; */
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
 }
 
 .margin-lg {
   margin: 20px 5px;
 }
 
-.countryname-container {
+.country-name-container {
   margin-top: 15px;
-  margin-left: 10px;
   position: relative;
   align-items: center;
+}
+/* 
+#div-box-1 {
+  margin-top: 0;
+  width: 350px;
+} */
+
+/* MOBILE */
+@media (max-width: 630px) {
+  #main-weather-container {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  #small-weather-container {
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  /* #div-box-1 {
+    width: auto;
+  } */
+
+  #div-box-2 {
+    flex-direction: column-reverse;
+  }
+
+  #country-name-container {
+    display: none;
+    margin-bottom: 10px;
+  }
+
+  .mobile-country-name {
+    margin-top: 30px;
+    margin-bottom: 0;
+    font-family: "Jomhuria", cursive;
+    font-size: 70px;
+    color: rgb(80, 57, 57);
+    display: flex;
+    width: auto;
+  }
+  .card {
+    margin-top: 0px;
+  }
 }

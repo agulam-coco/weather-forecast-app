@@ -8,14 +8,15 @@ class LargeWeatherCard extends Component {
   state = {};
   render() {
     return (
-      <div className="card">
+      <div className="card" id="card">
         <div className="faint">
           {/* 5:05 PM, Mon, Nov 23,202 */}
           <p>{this.props.obj.date}</p>
         </div>
         <div className="flex-row temperature">
           <Temperature
-            emoji={this.props.obj.emoji}
+            description={this.props.obj.description}
+            icon={this.props.obj.icon}
             temp={this.props.obj.temp}
             tempCName={this.props.tempCName}
           />

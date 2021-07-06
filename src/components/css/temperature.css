@@ -11,21 +11,39 @@
   margin: 0;
 }
 
-.temperature-lg p[id="emoji"] {
-  font-size: 80px;
+.temperature-lg #icon {
+  width: 130px;
+  height: 130px;
+  font-size: 20px;
 }
-
 .temperature-sm {
   font-family: "Oswald", sans-serif;
   font-size: 30px;
+  align-items: center;
+  justify-content: center;
 }
 
-.flex-column-reverse {
-  display: flex;
-  flex-direction: column-reverse;
+.temperature-sm #icon {
+  width: 60px;
+  height: 60px;
+  font-size: 10px;
 }
 
-.flex-row-reverse {
-  display: flex;
-  flex-direction: row-reverse;
+.temperature-lg #description {
+  font-size: 20px;
+}
+
+#description {
+  text-transform: capitalize;
+}
+
+#icon {
+  transition: background-image 2s ease-in;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.temperature-sm #celcius {
+  width: 40px;
 }

@@ -6,8 +6,18 @@ class Temperature extends Component {
   render() {
     return (
       <div className={this.props.tempCName}>
-        <p id="emoji">{this.props.emoji}</p>
-        <p>{this.props.temp}</p>
+        <div
+          id="icon"
+          style={{
+            backgroundImage: `url("${process.env.PUBLIC_URL}/weather-icons/svg/${this.props.icon}.svg")`,
+          }}
+          title="Temperature Icon"
+        ></div>
+        <p id="description">{this.props.description}</p>
+        <p className="flex-column">
+          {this.props.temp}
+          {<span className="faint"> °C</span>}
+        </p>
       </div>
     );
   }
