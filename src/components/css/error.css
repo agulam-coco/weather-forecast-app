@@ -16,15 +16,16 @@
 }
 
 .alert-error {
-  color: white;
-  background-color: #ff6666;
-  border: 1px solid white;
+  color: black;
+  background-color: RGBA(255, 102, 102, 0.5);
+  /* background-color: #ff6666; */
+  border: 1px solid black;
 }
 
 .alert-warning {
   color: black;
-  background-color: #ffe066;
-  /* border: 2px solid #fffae6; */
+  /* background-color: #ffe066; */
+  background-color: RGBA(255, 224, 102);
   border: 1px solid black;
 }
 
