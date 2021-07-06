@@ -8,7 +8,7 @@ class LargeWeatherCard extends Component {
   state = {};
   render() {
     return (
-      <div className="card">
+      <div className="card" id="card">
         <div className="faint">
           {/* 5:05 PM, Mon, Nov 23,202 */}
           <p>{this.props.obj.date}</p>

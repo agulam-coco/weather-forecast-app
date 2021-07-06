@@ -1,0 +1,46 @@
+#error {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 10px;
+  padding: 20px 10px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 2s;
+}
+
+#error-img {
+  width: 30px;
+  height: auto;
+  margin-right: 7px;
+}
+
+.alert-error {
+  color: white;
+  background-color: #ff6666;
+  border: 1px solid white;
+}
+
+.alert-warning {
+  color: black;
+  background-color: #ffe066;
+  /* border: 2px solid #fffae6; */
+  border: 1px solid black;
+}
+
+#error-text {
+  font-family: "Titillium Web", sans-serif;
+  font-size: 20px;
+  margin: 0;
+  align-self: flex-end;
+}
+
+@media (max-width: 630px) {
+  #error {
+    flex-direction: column;
+    align-items: center;
+  }
+  #error-text {
+    align-self: inherit;
+  }
+}

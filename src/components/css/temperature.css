@@ -28,22 +28,9 @@
   height: 60px;
   font-size: 10px;
 }
-.flex-column-reverse {
-  display: flex;
-  flex-direction: column-reverse;
-}
-
-.flex-row-reverse {
-  display: flex;
-  flex-direction: row-reverse;
-}
 
 .temperature-lg #description {
   font-size: 20px;
-}
-
-.temperature-sm #description {
-  font-size: 10px;
 }
 
 #description {

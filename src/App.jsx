@@ -5,6 +5,7 @@ import InputField from "./components/inputField";
 import LargeWeatherCard from "./components/largeWeatherCard";
 import SmallWeatherCard from "./components/smallWeatherCard";
 import CountryName from "./components/countryName";
+import Error from "./components/error";
 
 const API_KEY = `${process.env.REACT_APP_WEATHER_API_KEY}`;
 const UNITS = "metric";
@@ -12,7 +13,11 @@ const UNITS = "metric";
 class App extends Component {
   state = {
     lonLat: {},
+
+    errorIcon: "alert-error",
+
     smallWeatherClassName: " temperature-sm flex-column-reverse",
+
     smallWeatherCards: [
       {
         id: 1,
@@ -64,6 +69,8 @@ class App extends Component {
       name: "-----",
       alphaCode: "--",
     },
+
+    locationIcon: "default",
   };
 
   componentDidMount() {
@@ -71,7 +78,11 @@ class App extends Component {
     window.addEventListener("resize", this.handleMobileLogic);
     window.addEventListener("load", this.handleMobileLogic);
 
+    window.addEventListener("resize", this.handleLocationIcon);
+
+    this.handleLocationIcon();
     this.preloadWeatherImages();
+    this.setDefaultCountry();
     this.getUserLocation();
   }
 
@@ -79,7 +90,36 @@ class App extends Component {
     window.removeEventListener("scroll", this.handleMobileLogic);
     window.removeEventListener("resize", this.handleMobileLogic);
     window.removeEventListener("load", this.handleMobileLogic);
+
+    window.removeEventListener("resize", this.handleLocationIcon);
   }
+
+  removeErrorMessages = () => {
+    document.getElementById("error").style.opacity = 0;
+  };
+
+  setError = (errorType, errorMessage) => {
+    const errorDiv = document.getElementById("error");
+    const errorText = document.getElementById("error-text");
+
+    this.setState({ errorIcon: errorType });
+    errorDiv.className = errorType;
+    errorText.textContent = errorMessage;
+    errorDiv.style.opacity = 1;
+  };
+
+  handleLocationIcon = () => {
+    const deviceWidth = window.innerWidth;
+    let icon = "";
+
+    if (deviceWidth <= 480) icon = "mobile";
+    else if (deviceWidth <= 768) icon = "tablet";
+    else if (deviceWidth <= 1024) icon = "laptop";
+    else if (deviceWidth <= 1200) icon = "desktop";
+    else icon = "default";
+
+    this.setState({ locationIcon: icon });
+  };
 
   handleMobileLogic = () => {
     const mobileMaxHeight = 630;
@@ -94,8 +134,12 @@ class App extends Component {
 
     //if device is a phone
     if (window.innerWidth <= mobileMaxHeight) {
+      //show country name
+      document.getElementById("mobile-country-name").style.display = "block";
+      document.getElementById("card").style.marginTop = "0";
+
       let gridTop = window.innerHeight * 0.2,
-        gridBottom = window.innerHeight * 0.7;
+        gridBottom = window.innerHeight * 0.8;
 
       //loop through each of the potential class names and handle
       for (let i = 0; i < classNames.length; i++) {
@@ -137,10 +181,12 @@ class App extends Component {
 
       //hide mobile country name
       document.getElementById("mobile-country-name").style.display = "none";
+      // document.getElementById("card").style.marginTop = "54px";
     }
   };
 
   preloadWeatherImages = () => {
+    //load weather images
     let imagesArray = [
       "01d",
       "01n",
@@ -166,15 +212,46 @@ class App extends Component {
   };
 
   getUserLocation = () => {
-    //get user locatoin
     if (navigator.geolocation) {
+      //geolocation options
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 10_000,
+        maximumAge: 300_000,
+      };
+      //Get user geolocation
       navigator.geolocation.getCurrentPosition(
         this.getLonLat,
-        this.setDefaultCountry
+        (err) => {
+          console.error(err);
+
+          const code = err.code;
+          let errorMessage;
+
+          switch (code) {
+            case err.PERMISSION_DENIED:
+              errorMessage = "Geolocation access denied";
+              break;
+
+            case err.POSITION_UNAVAILABLE:
+              errorMessage = "Geolocation fetch failed";
+              break;
+
+            case err.TIMEOUT:
+              errorMessage = "Geolocation timed out";
+              break;
+
+            default:
+              errorMessage = "An unknown error has occured";
+          }
+
+          this.setError("alert-warning", errorMessage);
+        },
+        options
       );
     } else {
       console.error("User location not supported");
-      this.setDefaultCountry();
+      this.setError("alert-warning", "User location not supported");
     }
   };
 
@@ -193,6 +270,7 @@ class App extends Component {
     let userCountry = document.getElementById("input-field").value;
 
     if (userCountry.trim()) {
+      this.removeErrorMessages();
       let query = userCountry;
 
       this.fetchWeatherInfo(
@@ -205,10 +283,16 @@ class App extends Component {
             this.fetchsmallWeatherInfo();
             this.setMapBackground();
           } else {
-            console.error("Invalid");
+            console.error("City or country not found.");
+            this.setError("alert-error", "City or country not found");
           }
         })
-        .catch((error) => console.error("Network error caught"));
+        .catch((error) => {
+          console.error(error);
+          this.setError("alert-error", "Failed to fetch weather data");
+        });
+    } else {
+      this.setError("alert-warning", "Input cannot be blank");
     }
   };
 
@@ -227,9 +311,14 @@ class App extends Component {
       `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.lonLat.lat}&lon=${this.state.lonLat.lon}&units=${UNITS}&exclude=${exclude}&appid=${API_KEY}`
     )
       .then((data) => {
-        data ? this.parseJson5Days(data) : console.error("Invalid 2");
+        data
+          ? this.parseJson5Days(data)
+          : this.setError("alert-error", "Failed to fetch weather forecast");
       })
-      .catch((error) => console.error("Network error 5 days", error));
+      .catch((error) => {
+        console.error(error);
+        this.setError("alert-error", "Failed to fetch weather data");
+      });
   };
 
   getLonLat = (lonLatGeoLocation) => {
@@ -249,10 +338,13 @@ class App extends Component {
           this.fetchsmallWeatherInfo();
           this.setMapBackground();
         } else {
-          console.error("Invalid 3");
+          this.setError("alert-error", "Invalid Geolocation data");
         }
       })
-      .catch((error) => console.error("Network error lon Lat", error));
+      .catch((error) => {
+        console.error(error);
+        this.setError("alert-error", "Failed to fetch weather data");
+      });
   };
 
   fetchWeatherInfo = async (url) => {
@@ -294,9 +386,7 @@ class App extends Component {
     let humidity = data.main.humidity;
     let wind = data.wind.speed;
     let icon = this.formatIconName(data.weather[0].icon);
-    let date = new Date(0);
-    date.setUTCSeconds(data.dt + data.timezone);
-    date = this.getDate(date);
+    let date = this.getDate(data.dt + data.timezone);
 
     //country data for country name
     let countryName = data.name;
@@ -395,7 +485,11 @@ class App extends Component {
 
     let hh = dateObj.getHours();
     let mn = dateObj.getMinutes();
+    //format minutes field
+    mn = mn < 10 ? "0" + mn : mn;
     let am_pm = hh >= 12 ? "PM" : "AM";
+
+    console.log(mn);
 
     return `${hh}:${mn} ${am_pm}, ${dayName}, ${mm} ${dd},${yyyy}`;
   }
@@ -420,14 +514,20 @@ class App extends Component {
     return (
       <div>
         <div className="main-weather-container" id="main-weather-container">
-          <div className="flex-column margin-lg" style={{ marginTop: "0px" }}>
+          <div className="flex-column margin-lg" id="div-box-1">
             <InputField
+              locationIcon={this.state.locationIcon}
               functions={{
                 verifyInput: this.verifyInput,
+                getUserLocation: this.getUserLocation,
+                removeErrorMessages: this.removeErrorMessages,
               }}
             />
-            <div class="mobile-country-name" id="mobile-country-name">
+            <div className="mobile-country-name" id="mobile-country-name">
               {this.state.country.name + ", " + this.state.country.alphaCode}
+            </div>
+            <div className="flex-column">
+              <Error errorIcon={this.state.errorIcon} />
             </div>
 
             <LargeWeatherCard

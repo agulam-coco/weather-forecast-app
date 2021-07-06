@@ -1,4 +1,5 @@
 input {
+  display: block;
   width: auto;
   height: 30px;
   -webkit-transition: 1s; /* Safari */
@@ -30,14 +31,33 @@ input[type="text"]:focus {
 
 .search-button {
   width: 130px;
-  height: 25px;
-  background-color: rgba(245, 245, 245);
-  align-self: flex-end;
+  height: 30px;
+  background-color: #f8f9fa;
+  border: 1px solid #f8f9fa;
+  border-radius: 8px;
+  margin-left: auto;
+  align-self: flex-start;
+  /* background-color: rgba(245, 245, 245); */
   font-family: "Quicksand", sans-serif;
 }
 
 .search-button:hover {
-  background-color: rgba(240, 240, 240);
+  border: 1px solid #dadce0;
+}
+
+.round-border {
+  border-radius: 50%;
+}
+
+#location-button {
+  background-color: #f8f9fa;
+  border: 1px solid #f8f9fa;
+  height: 50px;
+  width: 50px;
+}
+
+#location-button:hover {
+  border: 1px solid #dadce0;
 }
 
 @media (max-width: 630px) {
