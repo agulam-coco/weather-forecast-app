@@ -7,12 +7,11 @@ import SmallWeatherCard from "./components/smallWeatherCard";
 import CountryName from "./components/countryName";
 import Error from "./components/error";
 
-const API_KEY = `${process.env.REACT_APP_WEATHER_API_KEY}`;
 const UNITS = "metric";
 
 class App extends Component {
   state = {
-    lonLat: {},
+    lonLat: { lon: "", lat: "" },
 
     errorIcon: "alert-error",
 
@@ -274,14 +273,14 @@ class App extends Component {
       let query = userCountry;
 
       this.fetchWeatherInfo(
-        `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=${UNITS}&appid=${API_KEY}`
+        // `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=${UNITS}&appid=${API_KEY}`
+        `/api/weather?q=${query}&units=${UNITS}`
       )
         .then((data) => {
           if (data) {
             this.parseJson(data);
             this.setLonLatState(data);
             this.fetchsmallWeatherInfo();
-            this.setMapBackground();
           } else {
             console.error("City or country not found.");
             this.setError("alert-error", "City or country not found");
@@ -298,9 +297,12 @@ class App extends Component {
 
   setLonLatState = (data) => {
     //set long and lat data to state
-    this.setState({
-      lonLat: { lon: data.coord.lon, lat: data.coord.lat },
-    });
+    this.setState(
+      {
+        lonLat: { lon: data.coord.lon, lat: data.coord.lat },
+      },
+      this.setMapBackground
+    );
   };
 
   fetchsmallWeatherInfo = () => {
@@ -308,7 +310,8 @@ class App extends Component {
     let exclude = "currently,minutely,hourly";
 
     this.fetchWeatherInfo(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.lonLat.lat}&lon=${this.state.lonLat.lon}&units=${UNITS}&exclude=${exclude}&appid=${API_KEY}`
+      // `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.lonLat.lat}&lon=${this.state.lonLat.lon}&units=${UNITS}&exclude=${exclude}&appid=${API_KEY}`
+      `/api/onecall?lat=${this.state.lonLat.lat}&lon=${this.state.lonLat.lon}&units=${UNITS}&exclude=${exclude}`
     )
       .then((data) => {
         data
@@ -328,7 +331,8 @@ class App extends Component {
     };
 
     this.fetchWeatherInfo(
-      `https://api.openweathermap.org/data/2.5/weather?lon=${lonLat.lon}&lat=${lonLat.lat}&units=${UNITS}&appid=${API_KEY}`
+      // `https://api.openweathermap.org/data/2.5/weather?lon=${lonLat.lon}&lat=${lonLat.lat}&units=${UNITS}&appid=${API_KEY}`
+      `/api/geo?lon=${lonLat.lon}&lat=${lonLat.lat}&units=${UNITS}`
     )
 
       .then((data) => {
@@ -336,7 +340,6 @@ class App extends Component {
           this.parseJson(data);
           this.setLonLatState(data);
           this.fetchsmallWeatherInfo();
-          this.setMapBackground();
         } else {
           this.setError("alert-error", "Invalid Geolocation data");
         }
