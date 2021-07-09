@@ -492,8 +492,6 @@ class App extends Component {
     mn = mn < 10 ? "0" + mn : mn;
     let am_pm = hh >= 12 ? "PM" : "AM";
 
-    console.log(mn);
-
     return `${hh}:${mn} ${am_pm}, ${dayName}, ${mm} ${dd},${yyyy}`;
   }
 
