@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import "./css/largeWeatherCard.css";
 import Humidity from "./humidity";
 import WindSpeed from "./windspeed";

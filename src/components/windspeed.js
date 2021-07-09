@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import "./css/weatherDetail.css";
 
 class WindSpeed extends Component {
