@@ -46,9 +46,11 @@
 /* MOBILE */
 @media (max-width: 630px) {
   #main-weather-container {
+    width: auto;
     padding: 0;
   }
   #main-weather-child-1 {
+    width: auto;
     flex-direction: column;
   }
 
