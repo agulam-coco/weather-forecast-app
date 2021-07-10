@@ -2,8 +2,6 @@
   padding: 40px 40px 40px 30px;
   font-size: 24px;
   background: #fff;
-  display: flex;
-  flex-direction: row;
   border-radius: 8px;
 }
 .flex-column-reverse {
@@ -41,11 +39,17 @@
   width: 300px;
 }
 
+.mobile-country-name {
+  display: none;
+}
+
 /* MOBILE */
 @media (max-width: 630px) {
   #main-weather-container {
-    flex-direction: column;
     padding: 0;
+  }
+  #main-weather-child-1 {
+    flex-direction: column;
   }
 
   #small-weather-container {
@@ -69,10 +73,12 @@
   .mobile-country-name {
     margin-top: 30px;
     margin-bottom: 0;
+    padding: 0 10px;
     font-family: "Jomhuria", cursive;
     font-size: 70px;
     color: rgb(80, 57, 57);
     display: flex;
+    flex-wrap: wrap;
     width: auto;
   }
   .card {

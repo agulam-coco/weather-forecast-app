@@ -514,49 +514,65 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div className="main-weather-container" id="main-weather-container">
-          <div className="flex-column margin-lg" id="div-box-1">
-            <InputField
-              locationIcon={this.state.locationIcon}
-              functions={{
-                verifyInput: this.verifyInput,
-                getUserLocation: this.getUserLocation,
-                removeErrorMessages: this.removeErrorMessages,
-              }}
-            />
-            <div className="mobile-country-name" id="mobile-country-name">
-              {this.state.country.name + ", " + this.state.country.alphaCode}
-            </div>
-            <div className="flex-column">
-              <Error errorIcon={this.state.errorIcon} />
-            </div>
+        <div
+          className="main-weather-container flex-column"
+          id="main-weather-container"
+        >
+          <div id="main-weather-child-1" className="flex-row">
+            <div className="flex-column margin-lg" id="div-box-1">
+              <InputField
+                locationIcon={this.state.locationIcon}
+                functions={{
+                  verifyInput: this.verifyInput,
+                  getUserLocation: this.getUserLocation,
+                  removeErrorMessages: this.removeErrorMessages,
+                }}
+              />
+              <div className="mobile-country-name" id="mobile-country-name">
+                {this.state.country.name + ", " + this.state.country.alphaCode}
+              </div>
+              <div className="flex-column">
+                <Error errorIcon={this.state.errorIcon} />
+              </div>
 
-            <LargeWeatherCard
-              obj={this.state.largeWeatherCard}
-              tempCName={this.state.largeWeatherCard.tempCName}
-            />
-          </div>
-          <div className="flex-column margin-lg" id="div-box-2">
-            <div className="flex-row" id="small-weather-container">
-              {this.state.smallWeatherCards.map((weatherCard) => (
-                <SmallWeatherCard
-                  key={weatherCard.id}
-                  obj={weatherCard}
-                  tempCName={this.state.smallWeatherClassName}
-                />
-              ))}
-            </div>
-            <div
-              className="flex-column country-name-container"
-              id="country-name-container"
-            >
-              <CountryName
-                name={this.state.country.name}
-                alphaCode={this.state.country.alphaCode}
+              <LargeWeatherCard
+                obj={this.state.largeWeatherCard}
+                tempCName={this.state.largeWeatherCard.tempCName}
               />
             </div>
+            <div className="flex-column margin-lg" id="div-box-2">
+              <div className="flex-row" id="small-weather-container">
+                {this.state.smallWeatherCards.map((weatherCard) => (
+                  <SmallWeatherCard
+                    key={weatherCard.id}
+                    obj={weatherCard}
+                    tempCName={this.state.smallWeatherClassName}
+                  />
+                ))}
+              </div>
+              <div
+                className="flex-column country-name-container"
+                id="country-name-container"
+              >
+                <CountryName
+                  name={this.state.country.name}
+                  alphaCode={this.state.country.alphaCode}
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            className="flex-column faint"
+            style={{ fontSize: "40px", margin: "200px 8px" }}
+          >
+            <b>
+              {" "}
+              SECTION
+              <br /> COMING SOON
+            </b>
           </div>
         </div>
+
         <div>
           Icons made by
           <a href="https://www.freepik.com" title="Freepik">
