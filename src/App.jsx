@@ -6,12 +6,13 @@ import LargeWeatherCard from "./components/largeWeatherCard";
 import SmallWeatherCard from "./components/smallWeatherCard";
 import CountryName from "./components/countryName";
 import Error from "./components/error";
+import Map from "./components/map";
 
 const UNITS = "metric";
 
 class App extends Component {
   state = {
-    lonLat: { lon: "", lat: "" },
+    lonLat: { lon: 0, lat: 0 },
 
     errorIcon: "alert-error",
 
@@ -560,6 +561,9 @@ class App extends Component {
                 />
               </div>
             </div>
+          </div>
+          <div className="map-container">
+            <Map lon={this.state.lonLat.lon} lat={this.state.lonLat.lat} />
           </div>
           <div
             className="flex-column faint"

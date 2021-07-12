@@ -1,0 +1,10 @@
+.map-container {
+  height: 400px;
+  padding: 10px;
+  margin: 30px 0;
+}
+
+#map {
+  border-radius: 8px;
+  height: inherit;
+}
