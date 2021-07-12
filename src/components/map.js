@@ -48,7 +48,7 @@ class Map extends Component {
     ).addTo(this.state.map);
 
     // this.state.map.fitBounds([[this.props.lat, this.props.lon]],);
-    this.state.map.setView([this.props.lat, this.props.lon], 9);
+    this.state.map.setView([this.props.lat, this.props.lon], 8);
   };
 
   initMapData() {
