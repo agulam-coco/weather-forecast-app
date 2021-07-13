@@ -42,13 +42,13 @@ class Map extends Component {
       "/api/map/{layer}/{z}/{x}/{y}",
       //   "https://tile.openweathermap.org/map/{layer}/{z}/{x}/{y}.png?appid={API_KEY}",
       {
-        layer: "precipitation_new",
+        layer: "temp_new",
         // API_KEY: "9e52375367807e1d6e79c1720ef928e4",
       }
     ).addTo(this.state.map);
 
     // this.state.map.fitBounds([[this.props.lat, this.props.lon]],);
-    this.state.map.setView([this.props.lat, this.props.lon], 8);
+    this.state.map.setView([this.props.lat, this.props.lon], 4);
   };
 
   initMapData() {
