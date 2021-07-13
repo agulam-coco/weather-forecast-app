@@ -15,47 +15,82 @@ class Map extends Component {
   }
 
   componentDidUpdate() {
-    this.handleIt();
+    this.handleMapUpdate();
   }
 
-  handleIt = () => {
+  handleMapUpdate = () => {
+    //open street map
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.state.map);
 
-    // L.tileLayer(
-    //   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-    //   {
-    //     attribution:
-    //       'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    //     maxZoom: 20,
-    //     id: "mapbox/streets-v11",
-    //     tileSize: 512,
-    //     zoomOffset: -1,
-    //     accessToken:
-    //       "pk.eyJ1IjoiYWd1bGFtIiwiYSI6ImNrcWt2a2ZydTBkMTUyeG40cWFnN3NtNm0ifQ.7yV6k5s2KL2vwJEruQzeBQ",
-    //   }
-    // ).addTo(this.state.map);
-
-    L.tileLayer(
-      "/api/map/{layer}/{z}/{x}/{y}",
-      //   "https://tile.openweathermap.org/map/{layer}/{z}/{x}/{y}.png?appid={API_KEY}",
-      {
-        layer: "temp_new",
-        // API_KEY: "9e52375367807e1d6e79c1720ef928e4",
-      }
-    ).addTo(this.state.map);
+    //temperature layer from backend
+    L.tileLayer("/api/map/{layer}/{z}/{x}/{y}", {
+      layer: "temp_new",
+    }).addTo(this.state.map);
 
     // this.state.map.fitBounds([[this.props.lat, this.props.lon]],);
     this.state.map.setView([this.props.lat, this.props.lon], 4);
   };
 
   initMapData() {
-    const map = L.map("map");
-    // const map = L.map("map").setView([this.props.lat, this.props.lon], 13);
+    //get color for a specific integer
+    function getColor(int) {
+      return int > 30
+        ? "rgba(252, 128, 20, 1)"
+        : int > 25
+        ? "rgba(255, 194, 40,1)"
+        : int > 20
+        ? "rgba(255, 240, 40, 1)"
+        : int > 10
+        ? "rgba(194, 255, 40, 1)"
+        : int > 0
+        ? "rgba(32, 140, 236, 1)"
+        : int > -10
+        ? "rgba(32, 196, 232, 1)"
+        : int > -20
+        ? "rgba(32, 140, 236, 1)"
+        : int > -30
+        ? "rgba(130, 87, 219, 1)"
+        : "rgba(130, 22, 146, 1)";
+    }
 
-    this.setState({ map: map }, this.handleIt);
+    //set map variable
+    const map = L.map("map");
+
+    //Info for map
+    let info = L.control();
+    info.onAdd = function (map) {
+      this._div = L.DomUtil.create("div", "info flex-row");
+      this._div.innerHTML = `<img src="weather-icons/svg/012-farenheit.svg" alt="Temperature icon"/> <h4>Temperature Map</h4>`; // create a div with a class "info"
+      return this._div;
+    };
+    info.addTo(map);
+
+    //Map legend
+    let legend = L.control({ position: "bottomright" });
+    legend.onAdd = (map) => {
+      let div = L.DomUtil.create("div", "info legend"),
+        grades = [-40, -30, -20, -10, 0, 10, 20, 25, 30];
+
+      // loop through our temperature intervals and generate a label with a colored square for each interval
+      for (let i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+          '<i style="background:' +
+          getColor(grades[i] + 1) +
+          '"></i> ' +
+          "<span >" +
+          grades[i] +
+          (grades[i + 1] + 1 ? "</span><br>" : "+</span>");
+      }
+
+      return div;
+    };
+    legend.addTo(map);
+
+    //add map to state
+    this.setState({ map: map }, this.handleMapUpdate);
   }
 
   render() {
