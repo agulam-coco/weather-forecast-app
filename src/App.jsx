@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import "./App.css";
-
-import InputField from "./components/inputField";
-import LargeWeatherCard from "./components/largeWeatherCard";
-import SmallWeatherCard from "./components/smallWeatherCard";
 import CountryName from "./components/countryName";
 import Error from "./components/error";
+import InputField from "./components/inputField";
+import LargeWeatherCard from "./components/largeWeatherCard";
 import Map from "./components/map";
+import SmallWeatherCard from "./components/smallWeatherCard";
+import WeatherChart from "./components/weatherChart";
 
 const UNITS = "metric";
 
@@ -71,6 +71,13 @@ class App extends Component {
     },
 
     locationIcon: "default",
+
+    hourly: {
+      date: [],
+      temp: [],
+      humidity: [],
+      feelsLike: [],
+    },
   };
 
   componentDidMount() {
@@ -308,16 +315,17 @@ class App extends Component {
 
   fetchsmallWeatherInfo = () => {
     //excluded values in api call
-    let exclude = "currently,minutely,hourly";
+    let exclude = "currently,minutely";
 
     this.fetchWeatherInfo(
       // `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.lonLat.lat}&lon=${this.state.lonLat.lon}&units=${UNITS}&exclude=${exclude}&appid=${API_KEY}`
       `/api/onecall?lat=${this.state.lonLat.lat}&lon=${this.state.lonLat.lon}&units=${UNITS}&exclude=${exclude}`
     )
       .then((data) => {
-        data
-          ? this.parseJson5Days(data)
-          : this.setError("alert-error", "Failed to fetch weather forecast");
+        if (data) {
+          this.parseJson5Days(data);
+          this.parseHourlyJson(data);
+        } else this.setError("alert-error", "Failed to fetch weather forecast");
       })
       .catch((error) => {
         console.error(error);
@@ -419,6 +427,38 @@ class App extends Component {
     });
   };
 
+  parseHourlyJson = (data) => {
+    let hourlyArray = data.hourly,
+      dateArray = [],
+      temperatureArray = [],
+      feelsLikeArray = [],
+      humidityArray = [];
+
+    for (let i = 0; i < hourlyArray.length; i++) {
+      let hourData = hourlyArray[i];
+
+      let date = this.getDateObject(hourData.dt).getTime();
+      let temp = hourData.temp;
+      let feelsLike = hourData.feels_like;
+      let humidity = hourData.humidity;
+
+      dateArray.push(date);
+      temperatureArray.push(temp);
+      feelsLikeArray.push(feelsLike);
+      humidityArray.push(humidity);
+    }
+
+    //set state with an object filed with arrays
+    let hourlyObj = {
+      date: dateArray,
+      temp: temperatureArray,
+      feelsLike: feelsLikeArray,
+      humidity: humidityArray,
+    };
+
+    this.setState({ hourly: hourlyObj });
+  };
+
   formatIconName(str) {
     //exclude the day or night tag at the end except for these noted
     let exclude = ["01d", "01n", "02d", "02n", "10d", "10n"];
@@ -442,7 +482,7 @@ class App extends Component {
     ];
 
     //date obj with utc time
-    let dateObj = this.getUtcDateObj(int);
+    let dateObj = this.getDateObject(int);
 
     //formating
     let mm = months[dateObj.getMonth()];
@@ -457,10 +497,13 @@ class App extends Component {
       : `${mm} ${dd}`;
   }
 
-  getUtcDateObj(int) {
-    let dateObj = new Date(0);
-    dateObj.setUTCSeconds(int);
-    return dateObj;
+  formatHourlyDate(int) {
+    let dateObj = this.getDateObject(int);
+    return `${dateObj.getHours()}:00`;
+  }
+
+  getDateObject(int) {
+    return new Date(int * 1000);
   }
 
   getDate(int) {
@@ -481,7 +524,7 @@ class App extends Component {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     //string formating
-    let dateObj = this.getUtcDateObj(int);
+    let dateObj = this.getDateObject(int);
     let dayName = days[dateObj.getDay()];
     let dd = String(dateObj.getDate()).padStart(2, "0");
     let mm = months[dateObj.getMonth()];
@@ -565,10 +608,8 @@ class App extends Component {
           <div className="map-container">
             <Map lon={this.state.lonLat.lon} lat={this.state.lonLat.lat} />
           </div>
-          <div
-            className="flex-column faint"
-            style={{ fontSize: "40px", margin: "200px 8px" }}
-          >
+          <div className="flex-column faint" style={{ fontSize: "40px" }}>
+            <WeatherChart hourly={this.state.hourly} />
             <b>
               {" "}
               SECTION
