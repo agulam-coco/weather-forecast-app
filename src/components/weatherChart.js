@@ -30,6 +30,7 @@ class WeatherChart extends Component {
             borderColor: config.temperatureBorder,
             pointBackgroundColor: config.temperatureBorder,
             data: temp,
+            
           },
           {
             label: config.feelsLikeLabel,

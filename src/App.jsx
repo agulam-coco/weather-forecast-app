@@ -192,9 +192,8 @@ class App extends Component {
     }
   };
 
-  preloadWeatherImages = () => {
-    //load weather images
-    let imagesArray = [
+  preloadWeatherImages = async () => {
+    const imagesArray = [
       "01d",
       "01n",
       "02d",
@@ -208,17 +207,33 @@ class App extends Component {
       "13",
       "50",
     ];
+    const navIcons = ["mobile", "tablet", "laptop", "desktop", "default"];
+    const errorIcons = ["alert-error", "alert-warning"];
 
-    for (let i = 0; i < imagesArray.length; i++) {
+    //load weather icons
+    imagesArray.forEach(
+      (value) =>
+        (new Image().src =
+          process.env.PUBLIC_URL + "/weather-icons/svg/" + value + ".svg")
+    );
+
+    //load navigation icons
+    navIcons.forEach(
+      (value) =>
+        (new Image().src = process.env.PUBLIC_URL) +
+        "/navigation-icons/svg/" +
+        value +
+        ".svg"
+    );
+
+    //load error icons
+    errorIcons.forEach((value) => {
       new Image().src =
-        process.env.PUBLIC_URL +
-        "/weather-icons/svg/" +
-        imagesArray[i] +
-        ".svg";
-    }
+        process.env.PUBLIC_URL + "/error-icons/" + value + ".svg";
+    });
   };
 
-  getUserLocation = () => {
+  getUserLocation = async () => {
     if (navigator.geolocation) {
       //geolocation options
       const options = {
@@ -273,7 +288,7 @@ class App extends Component {
     document.getElementById("search-button").click();
   };
 
-  verifyInput = () => {
+  verifyInput = async () => {
     let userCountry = document.getElementById("input-field").value;
 
     if (userCountry.trim()) {
@@ -313,7 +328,7 @@ class App extends Component {
     );
   };
 
-  fetchsmallWeatherInfo = () => {
+  fetchsmallWeatherInfo = async () => {
     //excluded values in api call
     let exclude = "currently,minutely";
 
@@ -333,7 +348,7 @@ class App extends Component {
       });
   };
 
-  getLonLat = (lonLatGeoLocation) => {
+  getLonLat = async (lonLatGeoLocation) => {
     let lonLat = {
       lon: lonLatGeoLocation.coords.longitude,
       lat: lonLatGeoLocation.coords.latitude,
@@ -365,7 +380,7 @@ class App extends Component {
     return response.ok ? data : null;
   };
 
-  parseJson5Days = (data) => {
+  parseJson5Days = async (data) => {
     let dailyArray = data.daily;
     let smallWeatherArray = [];
 
@@ -391,7 +406,7 @@ class App extends Component {
     });
   };
 
-  parseJson = (data) => {
+  parseJson = async (data) => {
     //large weather card data
     let temp = Math.round(data.main.temp);
     let description = data.weather[0].description;
@@ -427,7 +442,7 @@ class App extends Component {
     });
   };
 
-  parseHourlyJson = (data) => {
+  parseHourlyJson = async (data) => {
     let hourlyArray = data.hourly,
       dateArray = [],
       temperatureArray = [],
@@ -557,78 +572,85 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <div
-          className="main-weather-container flex-column"
-          id="main-weather-container"
-        >
-          <div id="main-weather-child-1" className="flex-row">
-            <div className="flex-column margin-lg" id="div-box-1">
-              <InputField
-                locationIcon={this.state.locationIcon}
-                functions={{
-                  verifyInput: this.verifyInput,
-                  getUserLocation: this.getUserLocation,
-                  removeErrorMessages: this.removeErrorMessages,
-                }}
-              />
-              <div className="mobile-country-name" id="mobile-country-name">
-                {this.state.country.name + ", " + this.state.country.alphaCode}
-              </div>
-              <div className="flex-column">
-                <Error errorIcon={this.state.errorIcon} />
-              </div>
+      <React.Fragment>
+        <div id="logo-container" className="flex-row">
+          <span id="logo">Niebla</span>
+          <span id="logo-trail">Weather Forecast</span>
+        </div>
+        <div>
+          <div
+            className="main-weather-container flex-column"
+            id="main-weather-container"
+          >
+            <div id="main-weather-child-1" className="flex-row">
+              <div className="flex-column margin-lg" id="div-box-1">
+                <InputField
+                  locationIcon={this.state.locationIcon}
+                  functions={{
+                    verifyInput: this.verifyInput,
+                    getUserLocation: this.getUserLocation,
+                    removeErrorMessages: this.removeErrorMessages,
+                  }}
+                />
+                <div className="mobile-country-name" id="mobile-country-name">
+                  {this.state.country.name +
+                    ", " +
+                    this.state.country.alphaCode}
+                </div>
+                <div className="flex-column">
+                  <Error errorIcon={this.state.errorIcon} />
+                </div>
 
-              <LargeWeatherCard
-                obj={this.state.largeWeatherCard}
-                tempCName={this.state.largeWeatherCard.tempCName}
-              />
-            </div>
-            <div className="flex-column margin-lg" id="div-box-2">
-              <div className="flex-row" id="small-weather-container">
-                {this.state.smallWeatherCards.map((weatherCard) => (
-                  <SmallWeatherCard
-                    key={weatherCard.id}
-                    obj={weatherCard}
-                    tempCName={this.state.smallWeatherClassName}
-                  />
-                ))}
-              </div>
-              <div
-                className="flex-column country-name-container"
-                id="country-name-container"
-              >
-                <CountryName
-                  name={this.state.country.name}
-                  alphaCode={this.state.country.alphaCode}
+                <LargeWeatherCard
+                  obj={this.state.largeWeatherCard}
+                  tempCName={this.state.largeWeatherCard.tempCName}
                 />
               </div>
+              <div className="flex-column margin-lg" id="div-box-2">
+                <div className="flex-row" id="small-weather-container">
+                  {this.state.smallWeatherCards.map((weatherCard) => (
+                    <SmallWeatherCard
+                      key={weatherCard.id}
+                      obj={weatherCard}
+                      tempCName={this.state.smallWeatherClassName}
+                    />
+                  ))}
+                </div>
+                <div
+                  className="flex-column country-name-container"
+                  id="country-name-container"
+                >
+                  <CountryName
+                    name={this.state.country.name}
+                    alphaCode={this.state.country.alphaCode}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="map-container">
+              <Map lon={this.state.lonLat.lon} lat={this.state.lonLat.lat} />
+            </div>
+            <div className="flex-column faint" style={{ fontSize: "40px" }}>
+              <WeatherChart hourly={this.state.hourly} />
+              <b style={{margin:"160px 0"}}>
+                SECTION
+                <br /> COMING SOON
+              </b>
             </div>
           </div>
-          <div className="map-container">
-            <Map lon={this.state.lonLat.lon} lat={this.state.lonLat.lat} />
-          </div>
-          <div className="flex-column faint" style={{ fontSize: "40px" }}>
-            <WeatherChart hourly={this.state.hourly} />
-            <b>
-              {" "}
-              SECTION
-              <br /> COMING SOON
-            </b>
-          </div>
-        </div>
 
-        <div>
-          Icons made by
-          <a href="https://www.freepik.com" title="Freepik">
-            Freepik
-          </a>
-          from
-          <a href="https://www.flaticon.com/" title="Flaticon">
-            www.flaticon.com
-          </a>
+          <div>
+            Icons made by
+            <a href="https://www.freepik.com" title="Freepik">
+              Freepik
+            </a>
+            from
+            <a href="https://www.flaticon.com/" title="Flaticon">
+              www.flaticon.com
+            </a>
+          </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

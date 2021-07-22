@@ -1,7 +1,7 @@
-export const temperatureBackground = "rgba(195, 40, 96, 0.1)";
+export const temperatureBackground = "rgba(195, 40, 96, 0.5)";
 export const temperatureBorder = "rgba(195, 40, 96, 1)";
 
-export const feelsLikeBackground = "rgba(255, 172, 100, 0.1)";
+export const feelsLikeBackground = "rgba(255, 172, 100, 0.5)";
 export const feelsLikeBorder = "rgba(255, 172, 100, 1)";
 
 export const tempLabel = "Temperature";
@@ -39,6 +39,13 @@ export const config = {
         grid: {
           display: false,
         },
+      },
+    },
+    legend: {
+      labels: {
+        usePointStyle: true,
+        fontSize: 28,
+        // pointStyle: "circle",
       },
     },
   },
