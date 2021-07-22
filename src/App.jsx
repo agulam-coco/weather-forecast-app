@@ -87,10 +87,10 @@ class App extends Component {
 
     window.addEventListener("resize", this.handleLocationIcon);
 
-    this.handleLocationIcon();
     this.preloadWeatherImages();
     this.setDefaultCountry();
     this.getUserLocation();
+    this.handleLocationIcon();
   }
 
   componentWillUnmount() {
@@ -632,7 +632,7 @@ class App extends Component {
             </div>
             <div className="flex-column faint" style={{ fontSize: "40px" }}>
               <WeatherChart hourly={this.state.hourly} />
-              <b style={{margin:"160px 0"}}>
+              <b style={{ margin: "160px 0" }}>
                 SECTION
                 <br /> COMING SOON
               </b>
