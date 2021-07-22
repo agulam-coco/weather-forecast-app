@@ -88,8 +88,7 @@ class App extends Component {
     window.addEventListener("resize", this.handleLocationIcon);
 
     this.preloadWeatherImages();
-    this.setDefaultCountry();
-    this.getUserLocation();
+    this.getUserLocation(true);
     this.handleLocationIcon();
   }
 
@@ -233,7 +232,7 @@ class App extends Component {
     });
   };
 
-  getUserLocation = async () => {
+  getUserLocation = async (compMount = false) => {
     if (navigator.geolocation) {
       //geolocation options
       const options = {
@@ -266,14 +265,17 @@ class App extends Component {
             default:
               errorMessage = "An unknown error has occured";
           }
-
-          this.setError("alert-warning", errorMessage);
+          //set error message if this is not the first time app is loading else set default country without error message
+          if (compMount) this.setDefaultCountry();
+          else this.setError("alert-warning", errorMessage);
         },
         options
       );
     } else {
       console.error("User location not supported");
       this.setError("alert-warning", "User location not supported");
+
+      if (compMount) this.setDefaultCountry();
     }
   };
 
