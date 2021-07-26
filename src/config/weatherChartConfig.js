@@ -4,8 +4,17 @@ export const temperatureBorder = "rgba(195, 40, 96, 1)";
 export const feelsLikeBackground = "rgba(255, 172, 100, 0.5)";
 export const feelsLikeBorder = "rgba(255, 172, 100, 1)";
 
+export const humidityBackground = "rgba(41, 128, 185, 0.5)";
+export const humidityBorder = "rgba(41, 128, 185, 1)";
+
+export const celciusTitle = "°C";
+export const celciusColor = "rgba(236, 132, 98, 1)";
+
+export const percentTitle = "%";
+
 export const tempLabel = "Temperature";
 export const feelsLikeLabel = "Feels Like";
+export const humidityLabel = "Humidity";
 
 export const config = {
   type: "line",
@@ -34,19 +43,33 @@ export const config = {
         grid: {
           display: false,
         },
+     
       },
       y: {
         grid: {
           display: false,
         },
+        title: {
+          display: true,
+          font: {
+            size: 18,
+          },
+        },
       },
     },
-    legend: {
-      labels: {
-        usePointStyle: true,
-        fontSize: 28,
-        // pointStyle: "circle",
+    plugins: {
+      legend: {
+        labels: {
+          padding: 20,
+          usePointStyle: true,
+          pointStyle: "circle",
+
+          font: {
+            size: 17,
+          },
+        },
       },
     },
   },
 };
+

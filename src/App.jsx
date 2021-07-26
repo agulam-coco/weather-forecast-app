@@ -7,6 +7,7 @@ import LargeWeatherCard from "./components/largeWeatherCard";
 import Map from "./components/map";
 import SmallWeatherCard from "./components/smallWeatherCard";
 import WeatherChart from "./components/weatherChart";
+import Header from "./components/header/header";
 
 const UNITS = "metric";
 
@@ -72,7 +73,7 @@ class App extends Component {
 
     locationIcon: "default",
 
-    hourly: {
+    chartHourlyObj: {
       date: [],
       temp: [],
       humidity: [],
@@ -341,7 +342,7 @@ class App extends Component {
       .then((data) => {
         if (data) {
           this.parseJson5Days(data);
-          this.parseHourlyJson(data);
+          this.parseChartHourlyData(data);
         } else this.setError("alert-error", "Failed to fetch weather forecast");
       })
       .catch((error) => {
@@ -444,20 +445,20 @@ class App extends Component {
     });
   };
 
-  parseHourlyJson = async (data) => {
-    let hourlyArray = data.hourly,
+  parseChartHourlyData = async (data) => {
+    let dataArray = data.hourly,
       dateArray = [],
       temperatureArray = [],
       feelsLikeArray = [],
       humidityArray = [];
 
-    for (let i = 0; i < hourlyArray.length; i++) {
-      let hourData = hourlyArray[i];
+    for (let i = 0; i < dataArray.length; i++) {
+      let data = dataArray[i];
 
-      let date = this.getDateObject(hourData.dt).getTime();
-      let temp = hourData.temp;
-      let feelsLike = hourData.feels_like;
-      let humidity = hourData.humidity;
+      let date = this.getDateObject(data.dt).getTime();
+      let temp = data.temp;
+      let feelsLike = data.feels_like;
+      let humidity = data.humidity;
 
       dateArray.push(date);
       temperatureArray.push(temp);
@@ -466,14 +467,14 @@ class App extends Component {
     }
 
     //set state with an object filed with arrays
-    let hourlyObj = {
+    let obj = {
       date: dateArray,
       temp: temperatureArray,
       feelsLike: feelsLikeArray,
       humidity: humidityArray,
     };
 
-    this.setState({ hourly: hourlyObj });
+    this.setState({ chartHourlyObj: obj });
   };
 
   formatIconName(str) {
@@ -575,10 +576,7 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <div id="logo-container" className="flex-row">
-          <span id="logo">Niebla</span>
-          <span id="logo-trail">Weather Forecast</span>
-        </div>
+        <Header />
         <div>
           <div
             className="main-weather-container flex-column"
@@ -633,11 +631,12 @@ class App extends Component {
               <Map lon={this.state.lonLat.lon} lat={this.state.lonLat.lat} />
             </div>
             <div className="flex-column faint" style={{ fontSize: "40px" }}>
-              <WeatherChart hourly={this.state.hourly} />
-              <b style={{ margin: "160px 0" }}>
-                SECTION
-                <br /> COMING SOON
-              </b>
+              <WeatherChart obj={this.state.chartHourlyObj} id={"ctx1"} />
+              <WeatherChart
+                obj={this.state.chartHourlyObj}
+                humidity={true}
+                id={"ctx2"}
+              />
             </div>
           </div>
 
