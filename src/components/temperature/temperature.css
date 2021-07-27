@@ -1,0 +1,49 @@
+.temperature {
+  justify-content: center;
+}
+.temperature-lg {
+  font-family: "Oswald", sans-serif;
+  font-size: 40px;
+}
+
+.temperature-lg p {
+  display: block;
+  margin: 0;
+}
+
+.temperature-lg #icon {
+  width: 130px;
+  height: 130px;
+  font-size: 20px;
+}
+.temperature-sm {
+  font-family: "Oswald", sans-serif;
+  font-size: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.temperature-sm #icon {
+  width: 60px;
+  height: 60px;
+  font-size: 10px;
+}
+
+.temperature-lg #description {
+  font-size: 20px;
+}
+
+#description {
+  text-transform: capitalize;
+}
+
+#icon {
+  transition: background-image 2s ease-in;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.temperature-sm #celcius {
+  width: 40px;
+}

@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import "./App.css";
-import CountryName from "./components/countryName";
-import Error from "./components/error";
-import InputField from "./components/inputField";
-import LargeWeatherCard from "./components/largeWeatherCard";
-import Map from "./components/map";
-import SmallWeatherCard from "./components/smallWeatherCard";
-import WeatherChart from "./components/weatherChart";
+import CountryName from "./components/countryName/countryName";
+import Error from "./components/error/error";
+import InputField from "./components/inputField/inputField";
+import LargeWeatherCard from "./components/largeWeatherCard/largeWeatherCard";
+import Map from "./components/map/map";
+import SmallWeatherCard from "./components/smallWeatherCard/smallWeatherCard";
+import WeatherChart from "./components/weatherChart/weatherChart";
 import Header from "./components/header/header";
+import Footer from "./components/footer/footer";
 
 const UNITS = "metric";
 
@@ -311,17 +312,23 @@ class App extends Component {
             console.error("City or country not found.");
             this.setError("alert-error", "City or country not found");
           }
+          // //re enable button
+          document.getElementById("search-button").disabled = false;
         })
         .catch((error) => {
           console.error(error);
           this.setError("alert-error", "Failed to fetch weather data");
+          //re enable button
+          document.getElementById("search-button").disabled = false;
         });
     } else {
       this.setError("alert-warning", "Input cannot be blank");
+      //re enable button
+      document.getElementById("search-button").disabled = false;
     }
   };
 
-  setLonLatState = (data) => {
+  setLonLatState = async (data) => {
     //set long and lat data to state
     this.setState(
       {
@@ -630,8 +637,10 @@ class App extends Component {
             <div className="map-container">
               <Map lon={this.state.lonLat.lon} lat={this.state.lonLat.lat} />
             </div>
-            <div className="flex-column faint" style={{ fontSize: "40px" }}>
+            <div className="flex-column">
               <WeatherChart obj={this.state.chartHourlyObj} id={"ctx1"} />
+            </div>
+            <div className="flex-column">
               <WeatherChart
                 obj={this.state.chartHourlyObj}
                 humidity={true}
@@ -639,17 +648,7 @@ class App extends Component {
               />
             </div>
           </div>
-
-          <div>
-            Icons made by
-            <a href="https://www.freepik.com" title="Freepik">
-              Freepik
-            </a>
-            from
-            <a href="https://www.flaticon.com/" title="Flaticon">
-              www.flaticon.com
-            </a>
-          </div>
+          <Footer />
         </div>
       </React.Fragment>
     );

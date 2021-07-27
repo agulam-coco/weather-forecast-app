@@ -1,0 +1,32 @@
+.footer-container {
+  flex-wrap: wrap;
+  align-self: flex-start;
+  width: 100%;
+  height: fit-content;
+  margin: 20px 0 0;
+  padding: 60px 20px 40px;
+  text-align: start;
+  justify-content: center;
+  border-radius: 6px;
+
+  background-color: rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.footer-container div {
+  margin: auto;
+  padding: auto;
+}
+
+.footer-container p {
+  margin: 3px;
+}
+
+.footer-container a {
+  color: rgba(0, 0, 0, 0.6);
+  text-decoration: none;
+}
+
+.footer-container a:hover {
+  color: rgba(36, 37, 42, 0.5);
+}
