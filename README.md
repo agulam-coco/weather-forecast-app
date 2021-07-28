@@ -3,9 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 <a href="https://niebla-forecast.herokuapp.com" target="_blank">
-	<p align="center">
-  		<img src="./Niebla.gif" width="300" title="Niebla Forecast">
-	</p>
+  		<img src="./Niebla.gif"  title="Niebla Forecast">
 </a>
 
 [![App Screenshot 1](app_images/04.png?raw=true )](https://niebla-forecast.herokuapp.com/)
