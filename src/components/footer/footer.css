@@ -30,3 +30,12 @@
 .footer-container a:hover {
   color: rgba(36, 37, 42, 0.5);
 }
+
+@media (max-width: 630px) {
+  .footer-container {
+    width: fit-content;
+  }
+  .footer-container div {
+    margin: 10px auto;
+  }
+}
