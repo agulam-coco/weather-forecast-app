@@ -46,7 +46,7 @@ class Map extends Component {
         : int > 10
         ? "rgba(194, 255, 40, 1)"
         : int > 0
-        ? "rgba(32, 140, 236, 1)"
+        ? "rgba(35, 221, 221, 1)"
         : int > -10
         ? "rgba(32, 196, 232, 1)"
         : int > -20
